@@ -32,8 +32,14 @@ def index(request):
 
 
 def post_detail(request, id):
-    post = next(post for post in posts if post["id"] == id)
-    return render(request, "detail.html", {"post": post})
+    # Проверяем, есть ли пост с таким id
+    post = next((post for post in posts if post['id'] == id), None)
+
+    if post is None:
+        raise Http404("Post not found")  # Если пост с таким id не найден, выбрасываем 404 ошибку
+
+    # Отправляем найденный пост в шаблон
+    return render(request, 'blog/detail.html', {'post': post})
 
 
 def category_posts(request, category_slug):
